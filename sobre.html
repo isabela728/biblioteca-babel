@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca de Babel</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container py-5">
+        <header class="text-center mb-5">
+            <h1 class="display-4 mb-3">Biblioteca de Babel</h1>
+            <p class="lead text-muted fst-italic">
+                A biblioteca está dividida em câmaras hexagonais, cada uma com 4 paredes de estantes, 
+                cinco prateleiras por parede e 32 volumes por prateleira.
+            </p>
+        </header>
+
+        <ul class="nav nav-tabs mb-4">
+            <li class="nav-item">
+                <a class="nav-link" href="index.html">Explorar</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="buscar.html">Buscar</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="sobre.html">Sobre a biblioteca</a>
+            </li>
+        </ul>
+
+        <div>
+            <div>
+                <article class="about-page">
+                    <h2>Sobre a Biblioteca de Babel</h2>
+                    <p>Versão web de "A Biblioteca de Babel" de Jorge Luis Borges.</p>
+
+                    <h3>Conceito</h3>
+                    <p>A Biblioteca de Babel é uma biblioteca fictícia criada pelo escritor argentino Jorge Luis Borges, conhecida por sua dimensão praticamente infinita e pela enorme quantidade de livros que possui. A biblioteca está dividida em câmaras hexagonais, cada uma com 4 paredes de estantes, cinco prateleiras por parede e 32 volumes por prateleira.</p>
+                    <p>Como o sistema gera todas as combinações possíveis de letras, QUALQUER TEXTO que você pensar já existe em algum lugar da biblioteca. Seu nome, sua vida, poemas que ninguém escreveu ainda, tudo.</p>
+
+                    <h3>Como funciona</h3>
+
+                    <h4>As seeds</h4>
+                    <p>O segredo é que o projeto não armazena nenhum texto. Ele usa um truque matemático bem inteligente.</p>
+                    <p>Quando você digita uma coordenada (câmara 4a8b1c0d, parede 2, prateleira 3, volume 12), o código pega esses valores e transforma em um número único. Esse processo se chama "hash".</p>
+                    <code>4a8b1c0d-2-3-12 → função hash → 1847293847 (exemplo)</code><br>
+                    <p>Esse número funciona como uma "seed" (semente). É tipo plantar uma árvore: a mesma semente sempre vai gerar a mesma árvore. A partir dessa seed, o código gera 3200 caracteres de texto de forma determinística. "Determinística" significa que sempre que você usar essa mesma seed, vai gerar exatamente o mesmo texto.</p>
+
+                    <h4>O gerador de caracteres</h4>
+                    <p>O código usa uma fórmula matemática chamada LCG (Linear Congruential Generator). É tipo assim:</p>
+                    <ol>
+                        <li>Pega a seed inicial</li>
+                        <li>Multiplica por 16807</li>
+                        <li>Divide por 2147483647 e pega o resto</li>
+                        <li>Usa esse resultado pra escolher uma letra do alfabeto</li>
+                        <li>Repete o processo 3200 vezes</li>
+                    </ol>
+                    <p>O resultado parece aleatório, mas não é. É sempre o mesmo pra mesma seed.</p>
+
+                    <h4>Por que isso é eficiente?</h4>
+                    <p>Imagina se você quisesse salvar todas as páginas possíveis num banco de dados. Seria impossível. Mas com esse método, você gera qualquer página na hora, sem ocupar espaço nenhum em disco.</p>
+                    <p>É tipo a diferença entre guardar um vídeo de 1GB ou guardar a fórmula matemática que desenha cada frame do vídeo.</p>
+
+                    <h3>Como cada função funciona</h3>
+
+                    <h4>Explorar (navegação manual)</h4>
+                    <p>Quando você clica em "Abrir":</p>
+                    <ol>
+                        <li>O código pega os 4 valores que você digitou</li>
+                        <li>Junta eles numa string tipo "abc123-2-3-15"</li>
+                        <li>Passa pela função hash pra virar um número</li>
+                        <li>Usa esse número como seed pro gerador</li>
+                        <li>Gera 3200 caracteres</li>
+                        <li>Mostra na tela</li>
+                    </ol>
+                    <p>Se você fechar o navegador e voltar amanhã com as mesmas coordenadas, vai ver exatamente o mesmo texto. Isso acontece porque a matemática é sempre igual.</p>
+
+                    <h4>Aleatório</h4>
+                    <p>O botão "Aleatório" é o mais simples:</p>
+                    <ol>
+                        <li>Gera um código hexadecimal aleatório para o nome da câmara</li>
+                        <li>Sorteia um número de 1 a 4 para a parede</li>
+                        <li>Sorteia um número de 1 a 5 para a prateleira</li>
+                        <li>Sorteia um número de 1 a 32 para o volume</li>
+                        <li>Chama a função de abrir com essas coordenadas</li>
+                    </ol>
+
+                    <h4>Buscar texto</h4>
+                    <p>Quando você digita um texto pra buscar:</p>
+                    <ol>
+                        <li>O código calcula o hash do seu texto (tipo "isabela" → 8374829)</li>
+                        <li>Usa partes diferentes desse número pra criar coordenadas:</li>
+                    </ol>
+                    <ul>
+                        <li>Os primeiros bits viram o código da câmara</li>
+                        <li>Outros bits viram o número da parede (resto da divisão por 4, +1)</li>
+                        <li>Mais bits viram a prateleira (resto por 5, +1)</li>
+                        <li>Últimos bits viram o volume (resto por 32, +1)</li>
+                    </ul>
+                    <ol start="3">
+                        <li>Marca essa localização como "especial"</li>
+                        <li>Quando você abre aquela página, o código injeta seu texto numa posição específica do conteúdo gerado</li>
+                    </ol>
+                    <p>Não é exatamente que o texto "já existia lá". O código garante que quando você procurar por ele, vai gerar uma página que contenha aquele texto.</p>
+                    <p>É tipo o paradoxo de Schrödinger: o texto só "existe" quando você observa (busca por ele).</p>
+                    <p>Mas ainda assim é uma metáfora perfeita pro conto do Borges, porque matematicamente falando, TODAS as combinações possíveis de caracteres podem ser geradas. Só que você precisaria saber exatamente qual coordenada acessar.</p>
+
+                    <h4>Cache de buscas</h4>
+                    <p>O sistema guarda num objeto JavaScript qual texto você procurou e onde ele foi "colocado". Quando você volta naquela coordenada, ele sabe que precisa inserir aquele texto de novo no mesmo lugar.</p>
+                    <p>É tipo um mapa: <code>{ "isabela-4a8b1c0d-2-3-12": "isabela" }</code></p>
+
+                </article>
+            </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

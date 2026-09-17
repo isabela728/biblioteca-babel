@@ -18,21 +18,20 @@
             </p>
         </header>
 
-        <ul class="nav nav-tabs mb-4" role="tablist">
+        <ul class="nav nav-tabs mb-4">
             <li class="nav-item">
-                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#explorar">
-                    Explorar
-                </button>
+                <a class="nav-link active" href="index.html">Explorar</a>
             </li>
             <li class="nav-item">
-                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#buscar">
-                    Buscar
-                </button>
+                <a class="nav-link" href="buscar.html">Buscar</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="sobre.html">Sobre a biblioteca</a>
             </li>
         </ul>
 
-        <div class="tab-content">
-            <div class="tab-pane fade show active" id="explorar">
+        <div>
+            <div>
                 <div class="card mb-4">
                     <div class="card-body">
                         <div class="row g-3 mb-3">
@@ -66,27 +65,6 @@
                         <div class="text-muted small" id="info">---</div>
                     </div>
                 </div>
-            </div>
-
-            <div class="tab-pane fade" id="buscar">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <label class="form-label">Digite o texto que deseja encontrar</label>
-                        <textarea class="form-control mb-3" id="textoBusca" rows="3" 
-                            placeholder="Qualquer texto que você imaginar..."></textarea>
-                        
-                        <button class="btn btn-primary" onclick="buscar()">Procurar</button>
-                    </div>
-                </div>
-
-                <div id="resultado" class="card" style="display: none;">
-                    <div class="card-body">
-                        <h5 class="card-title">Encontrado!</h5>
-                        <p class="font-monospace text-primary" id="coordenadas"></p>
-                        <button class="btn btn-success" id="irPara">Ver Página</button>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 

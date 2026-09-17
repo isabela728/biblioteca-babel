@@ -143,16 +143,22 @@ function mostrarResultado(cam, par, prat, vol) {
     coords.innerText = `Câmara ${cam} / Parede ${par} / Prateleira ${prat} / Volume ${vol}`;
 
     btn.onclick = () => {
-        document.getElementById('camara').value = cam;
-        document.getElementById('parede').value = par;
-        document.getElementById('prateleira').value = prat;
-        document.getElementById('volume').value = vol;
-
-        const tab = document.querySelector('[data-bs-target="#explorar"]');
-        if (tab) tab.click();
-        
-        abrirPagina();
+        const texto = document.getElementById('textoBusca').value.trim();
+        const params = new URLSearchParams({ cam, par, prat, vol, texto });
+        window.location.href = `index.html?${params.toString()}`;
     };
+}
+
+function mostrarBusca() {
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+        link.setAttribute('aria-selected', 'false');
+    });
+    const linkBusca = document.querySelector('[data-bs-target="#buscar"]');
+    linkBusca.classList.add('active');
+    linkBusca.setAttribute('aria-selected', 'true');
+    document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('show', 'active'));
+    document.getElementById('buscar').classList.add('show', 'active');
 }
 
 // busca
@@ -171,24 +177,53 @@ function buscar() {
 
 // inicializa
 document.addEventListener('DOMContentLoaded', () => {
+    const parede = document.getElementById('parede');
+    const prateleira = document.getElementById('prateleira');
+    const volume = document.getElementById('volume');
+
+    if (!parede || !prateleira || !volume) {
+        return;
+    }
+
     // validacao em tempo real
-    document.getElementById('parede').addEventListener('blur', function() {
+    parede.addEventListener('blur', function() {
         let val = parseInt(this.value);
         if (isNaN(val) || val < 1) this.value = 1;
         if (val > 4) this.value = 4;
     });
 
-    document.getElementById('prateleira').addEventListener('blur', function() {
+    prateleira.addEventListener('blur', function() {
         let val = parseInt(this.value);
         if (isNaN(val) || val < 1) this.value = 1;
         if (val > 5) this.value = 5;
     });
 
-    document.getElementById('volume').addEventListener('blur', function() {
+    volume.addEventListener('blur', function() {
         let val = parseInt(this.value);
         if (isNaN(val) || val < 1) this.value = 1;
         if (val > 32) this.value = 32;
     });
 
-    aleatorio();
+    const params = new URLSearchParams(window.location.search);
+    const cam = params.get('cam');
+    const par = params.get('par');
+    const prat = params.get('prat');
+    const vol = params.get('vol');
+    const texto = params.get('texto');
+
+    if (cam && par && prat && vol) {
+        document.getElementById('camara').value = cam;
+        parede.value = par;
+        prateleira.value = prat;
+        volume.value = vol;
+
+        if (texto) {
+            textoDestaque = texto;
+            encontrarTexto(texto);
+        }
+
+        abrirPagina();
+    } else {
+        aleatorio();
+    }
 });
